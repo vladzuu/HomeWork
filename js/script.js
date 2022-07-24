@@ -25,6 +25,7 @@ function addProductToHTML() {
       price.textContent = `${obj.price} грн`
 
 
+
       divBlock.classList.add('divBlock')
       button.setAttribute('id-product', idPrpduct)
       button.classList.add('button');
@@ -42,7 +43,7 @@ addProductToHTML();
 document.querySelectorAll('.button').forEach((e) => e.addEventListener('click', shoppingCart));
 
 function shoppingCart(e) {
-   const index = 
+   const index =
       console.log(e.target);
 }
 
