@@ -65,7 +65,7 @@ function basketSum(string) {
    document.querySelector('.buy').onclick = aproveOrder;
 
    function aproveOrder() {
-      let block = ddocument.querySelector('.block-basket');
+      let block = document.querySelector('.block-basket');
       basketArr = [];
       balance = balance - sum;
       block.innerHTML = `Заказ оформлен. Сумма баланса ${balance} грн`;
