@@ -11,9 +11,6 @@ const productsArr = [
 ];
 let balance = 5000;
 
-
-
-
 function addProductToHTML(arr) {
    let idPrpduct = 0;
    const doc = document.querySelector('.block');
@@ -38,9 +35,8 @@ function addProductToHTML(arr) {
 
       idPrpduct++;
    }
-}
+};
 addProductToHTML(productsArr);
-
 document.querySelectorAll('.btn').forEach((e) => e.addEventListener('click', addBasket));
 
 let basketArr = [];
@@ -48,7 +44,7 @@ function addBasket(e) {
    let idProduct = e.target.getAttribute('id-product');
    basketArr.push(productsArr[idProduct])
    update();
-}
+};
 
 function update() {
    let stringBasket = `Баланс ${balance} грн. <br>`
@@ -56,7 +52,7 @@ function update() {
       stringBasket += `${obj.names} ${obj.price} грн <br>`
    }
    return basketSum(stringBasket);
-}
+};
 
 function basketSum(string) {
    const doc = document.querySelector('.block-basket');
@@ -69,14 +65,12 @@ function basketSum(string) {
    document.querySelector('.buy').onclick = aproveOrder;
 
    function aproveOrder() {
-      let block = document.querySelector('.block-basket');
+      let block = ddocument.querySelector('.block-basket');
       basketArr = [];
       balance = balance - sum;
       block.innerHTML = `Заказ оформлен. Сумма баланса ${balance} грн`;
    };
-
-
-}
+};
 
 
 
