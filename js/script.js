@@ -40,35 +40,33 @@ addProductToHTML(productsArr);
 document.querySelectorAll('.btn').forEach((e) => e.addEventListener('click', addBasket));
 
 let basketArr = [];
-function addBasket(e) {
-   let idProduct = e.target.getAttribute('id-product');
+function addProductToBasket(e) {
+   const idProduct = e.target.getAttribute('id-product');
    basketArr.push(productsArr[idProduct])
    update();
 };
 
-function update() {
-   let stringBasket = `Баланс ${balance} грн. <br>`
-   for (const obj of basketArr) {
-      stringBasket += `${obj.names} ${obj.price} грн <br>`
-   }
-   return basketSum(stringBasket);
-};
-
-function basketSum(string) {
+let sumOutside;
+function updateBasketAndCalculate() {
    const doc = document.querySelector('.block-basket');
+   let stringBasket = `Баланс ${balance} грн. <br>`;
    let sum = 0;
+
    for (const obj of basketArr) {
       sum = sum + obj.price
-   }
-   string += `Итого:${sum} грн <button class="buy">Оформить заказ</button>`;
-   doc.innerHTML = string;
-   document.querySelector('.buy').onclick = aproveOrder;
-
-   function aproveOrder() {
-      let block = document.querySelector('.block-basket');
-      basketArr = [];
-      balance = balance - sum;
-      block.innerHTML = `Заказ оформлен. Сумма баланса ${balance} грн`;
+      stringBasket += `${obj.names} ${obj.price} грн <br>`
    };
+
+   stringBasket += `Итого:${sum} грн <button class="buy">Оформить заказ</button>`;
+   doc.innerHTML = stringBasket;
+   sumOutside = sum;
+   document.querySelector('.buy').onclick = aproveOrder;
+};
+
+function aproveOrder() {
+   let block = document.querySelector('.block-basket');
+   basketArr = [];
+   balance = balance - sumOutside;
+   block.innerHTML = `Заказ оформлен. Сумма баланса ${balance} грн`;
 };
 
