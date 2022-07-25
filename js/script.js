@@ -46,30 +46,28 @@ function addProductToBasket(e) {
    updateBasketAndCalculate();
 };
 
-let sumOutside;
+let sumOrderTotal;
 function updateBasketAndCalculate() {
    const doc = document.querySelector('.block-basket');
    let stringBasket = `Баланс ${balance} грн. <br>`;
-
-   // for (const obj of basketArr) {
-   //    sum = sum + obj.price
-   //    stringBasket += `${obj.names} ${obj.price} грн <br>`
-   // };
-
    const sum = basketArr.reduce((total, obj) => total + obj.price, 0)
    stringBasket += basketArr.reduce((total, obj) => total += `${obj.names} ${obj.price} грн <br>`, '')
 
 
    stringBasket += `Итого:${sum} грн <button class="buy">Оформить заказ</button>`;
    doc.innerHTML = stringBasket;
-   sumOutside = sum;
+   sumOrderTotal = sum;
    document.querySelector('.buy').onclick = aproveOrder;
 };
 
 function aproveOrder() {
-   let block = document.querySelector('.block-basket');
+   const block = document.querySelector('.block-basket');
    basketArr = [];
-   balance = balance - sumOutside;
-   block.innerHTML = `Заказ оформлен. Сумма баланса ${balance} грн`;
+   if (sumOrderTotal < balance) {
+      balance = balance - sumOrderTotal;
+      block.innerHTML = `Заказ оформлен. Сумма баланса ${balance} грн`;
+   } else {
+      block.innerHTML = `Недостаточно средств на балансе для покупки`;
+   }
 };
 
