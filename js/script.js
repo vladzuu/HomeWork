@@ -11,63 +11,11 @@ const productsArr = [
 ];
 let balance = 5000;
 
-function addProductToHTML(arr) {
-   let idPrpduct = 0;
-   const doc = document.querySelector('.block');
-   for (const obj of arr) {
-      const divBlock = document.createElement('div');
-      let product = document.createElement('div');
-      let price = document.createElement('div');
-      let button = document.createElement('button');
+const obj = new ElementCreate(productsArr, '.block');
+obj.addProductToHTML();
 
-      button.textContent = "Купить"
-      product.textContent = obj.names
-      price.textContent = `${obj.price} грн`
+const basket = new Basket();
 
-      divBlock.classList.add('divBlock')
-      button.setAttribute('id-product', idPrpduct)
-      button.classList.add('btn');
-
-      doc.append(divBlock);
-      divBlock.append(product);
-      divBlock.append(price);
-      divBlock.append(button);
-
-      idPrpduct++;
-   }
-};
-addProductToHTML(productsArr);
-document.querySelectorAll('.btn').forEach((e) => e.addEventListener('click', addProductToBasket));
-
-let basketArr = [];
-function addProductToBasket(e) {
-   const idProduct = e.target.getAttribute('id-product');
-   basketArr.push(productsArr[idProduct])
-   updateBasketAndCalculate();
-};
-
-let sumOrderTotal;
-function updateBasketAndCalculate() {
-   const doc = document.querySelector('.block-basket');
-   let stringBasket = `Баланс ${balance} грн. <br>`;
-   const sum = basketArr.reduce((total, obj) => total + obj.price, 0)
-   stringBasket += basketArr.reduce((total, obj) => total += `${obj.names} ${obj.price} грн <br>`, '')
-
-
-   stringBasket += `Итого:${sum} грн <button class="buy">Оформить заказ</button>`;
-   doc.innerHTML = stringBasket;
-   sumOrderTotal = sum;
-   document.querySelector('.buy').onclick = aproveOrder;
-};
-
-function aproveOrder() {
-   const block = document.querySelector('.block-basket');
-   basketArr = [];
-   if (sumOrderTotal < balance) {
-      balance = balance - sumOrderTotal;
-      block.innerHTML = `Заказ оформлен. Сумма баланса ${balance} грн`;
-   } else {
-      block.innerHTML = `Недостаточно средств на балансе для покупки`;
-   }
-};
-
+document.querySelectorAll('.btn').forEach((e) => e.addEventListener('click', () => {
+   basket.addProductToBasket(e);
+}));
