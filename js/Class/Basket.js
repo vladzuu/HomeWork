@@ -12,12 +12,11 @@ class Basket {
    updateBasketAndCalculate() {
       const doc = document.querySelector('.block-basket');
       let stringBasket = `Баланс ${balance} грн. <br>`;
-      let sum = this.basketArr.reduce((total, obj) => total + obj.price, 0)
+      this.sumOrderTotal = this.basketArr.reduce((total, obj) => total + obj.price, 0)
       stringBasket += this.basketArr.reduce((total, obj) => total += `${obj.names} ${obj.price} грн <br>`, '')
 
-      stringBasket += `Итого:${sum} грн <button class="buy">Оформить заказ</button>`;
+      stringBasket += `Итого:${this.sumOrderTotal} грн <button class="buy">Оформить заказ</button>`;
       doc.innerHTML = stringBasket;
-      this.sumOrderTotal = sum;
       console.log(this.sumOrderTotal);
       document.querySelector('.buy').onclick = this.aproveOrder.bind(this);
    };
