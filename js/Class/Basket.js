@@ -1,23 +1,25 @@
 class Basket {
    constructor() {
       this.basketArr = [];
-      this.sumOrderTotal;
+      this.sumOrderTotal = 0;;
    }
-   addProductToBasket(event) {
+   addProductToBasket(event, clas) {
       const idProduct = event.getAttribute('id-product');
-      this.basketArr.push(productsArr[idProduct])
-      this.updateBasketAndCalculate();
+      this.basketArr.push(clas);
+      console.log(clas.price);
+
+      this.updateBasketAndCalculate(clas);
    };
 
-   updateBasketAndCalculate() {
+   updateBasketAndCalculate(clas) {
       const doc = document.querySelector('.block-basket');
       let stringBasket = `Баланс ${balance} грн. <br>`;
+
       this.sumOrderTotal = this.basketArr.reduce((total, obj) => total + obj.price, 0)
       stringBasket += this.basketArr.reduce((total, obj) => total += `${obj.names} ${obj.price} грн <br>`, '')
 
       stringBasket += `Итого:${this.sumOrderTotal} грн <button class="buy">Оформить заказ</button>`;
       doc.innerHTML = stringBasket;
-      console.log(this.sumOrderTotal);
       document.querySelector('.buy').onclick = this.aproveOrder.bind(this);
    };
 
