@@ -1,10 +1,11 @@
 class Product {
-   constructor(product, price, idPrpduct) {
+   constructor(product, price, idProduct) {
       this.product = product;
       this.price = price;
-      this.idPrpduct = idPrpduct;
+      this.idProduct = idProduct;
+      this.addProductToHTML('.block');
    }
-   addProductToHTML(parentCSSClass, clas) {
+   addProductToHTML(parentCSSClass) {
       const doc = document.querySelector(parentCSSClass);
       const divBlock = document.createElement('div');
       let product = document.createElement('div');
@@ -16,14 +17,16 @@ class Product {
       price.textContent = `${this.price} грн`
 
       divBlock.classList.add('divBlock')
-      button.setAttribute('id-product', this.idPrpduct)
+      button.setAttribute('id-product', this.idProduct)
       button.classList.add('btn');
 
       doc.append(divBlock);
       divBlock.append(product);
       divBlock.append(price);
       divBlock.append(button);
+      const obj = this;
 
-      button.addEventListener('click', () => basket.addProductToBasket(button, clas))
+      button.addEventListener('click', (e) => basket.addProductToBasket(e, obj))
+
    }
 }
