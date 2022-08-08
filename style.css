@@ -75,3 +75,6 @@ background-color: gray;
 .material-symbols-outlined {
  
 }
+.input-wraper{
+   display: flex;
+}
