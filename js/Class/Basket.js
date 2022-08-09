@@ -7,7 +7,7 @@ class Basket {
    }
 
    addProductToBasket(event, obj) {
-      const idButton = event.target.getAttribute('id-product');
+      let idButton = event.target.getAttribute('id-product');
       idButton = Number(idButton);
       this.idWork = idButton;
       let checkBasket = false;
@@ -31,7 +31,7 @@ class Basket {
       balanceBlock.textContent = `Баланс ${balance} грн`
       const doc = document.querySelector('.block-basket');
       const wraper = document.createElement('div');
-      wraper.classList.add('idwraper');
+      wraper.classList.add('idwraper')
       wraper.setAttribute('idwraper', this.idWork);
       doc.append(wraper);
 
