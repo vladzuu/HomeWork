@@ -1,106 +1,109 @@
 class Basket {
    constructor() {
-      this.basketArr = [];
+      this.basketArr = {};
       this.sumOrderTotal = 0;
       this.idWork;
+      this.deleteProductHTML = false;
    }
-   addProductToBasket(event, obj) {
 
-      let idButton = event.target.getAttribute('id-product');
-      idButton = Number(idButton)
+   addProductToBasket(event, obj) {
+      const idButton = event.target.getAttribute('id-product');
+      idButton = Number(idButton);
+      this.idWork = idButton;
       let checkBasket = false;
 
-      for (let key of this.basketArr) {
-         if (key.idProduct == idButton) {
+      for (let key in this.basketArr) {
+         if (key == idButton) {
             checkBasket = true;
-            key.amount++
+            this.basketArr[key].amount++;
          }
       };
       if (!checkBasket) {
-         this.basketArr.push(obj);
-         this.basketArr[this.basketArr.length - 1].amount = 1;
+         this.basketArr[idButton] = obj;
+         this.basketArr[idButton].amount = 1;
          this.createElementBasket();
       }
       this.updateBasketAndCalculate();
    };
+
    createElementBasket() {
-      const indexProduct = this.basketArr.length - 1;
-      const obj = this.basketArr[indexProduct];
+      const balanceBlock = document.querySelector('.balance');
+      balanceBlock.textContent = `Баланс ${balance} грн`
       const doc = document.querySelector('.block-basket');
       const wraper = document.createElement('div');
-      wraper.classList.add('idwraper')
-      wraper.setAttribute('idwraper', obj.idProduct)
+      wraper.classList.add('idwraper');
+      wraper.setAttribute('idwraper', this.idWork);
       doc.append(wraper);
 
       const nameProduct = document.createElement('div');
-      nameProduct.innerHTML = `Наименование ${obj.product} цена ${obj.price} грн/шт<br>`
+      nameProduct.innerHTML = `Наименование ${this.basketArr[this.idWork].product} цена ${this.basketArr[this.idWork].price} грн/шт<br>`
       wraper.append(nameProduct);
 
       const inputWraper = document.createElement('div');
-      inputWraper.classList.add('input-wraper')
+      inputWraper.classList.add('input-wraper');
       wraper.append(inputWraper);
 
       const inputMinus = document.createElement('input');
       inputMinus.setAttribute('value', '-');
       inputMinus.setAttribute('operation', 'minus');
-      inputMinus.setAttribute('type', 'button')
-      inputMinus.setAttribute('idinput', obj.idProduct)
+      inputMinus.setAttribute('type', 'button');
+      inputMinus.setAttribute('idinput', this.idWork);
       inputMinus.classList.add('input-button');
       inputWraper.append(inputMinus);
+      inputMinus.addEventListener('click', this.plusMinusGoods.bind(this))
 
       const inputEntry = document.createElement('input');
-      inputEntry.setAttribute('idinput', obj.idProduct)
-      inputEntry.setAttribute('value', obj.amount)
+      inputEntry.setAttribute('idinput', this.idWork)
+      inputEntry.setAttribute('value', this.basketArr[this.idWork].amount)
+      inputEntry.setAttribute('type', 'number')
       inputEntry.classList.add('input-count');
       inputWraper.append(inputEntry);
+      inputEntry.addEventListener('input', this.changeAmountGoods.bind(this))
+
 
       const inputPlus = document.createElement('input');
       inputPlus.setAttribute('value', '+');
       inputPlus.setAttribute('operation', 'plus');
       inputPlus.setAttribute('type', 'button')
-      inputPlus.setAttribute('idinput', obj.idProduct)
+      inputPlus.setAttribute('idinput', this.idWork)
       inputPlus.classList.add('input-button');
       inputWraper.append(inputPlus);
+      inputPlus.addEventListener('click', this.plusMinusGoods.bind(this))
 
-      const buttonDelite = document.createElement('div');
-      buttonDelite.innerHTML = `<button class="input-button" operation="del" ><span type="button" operation="del" idinput="${obj.idProduct}" 
+      const buttonDelete = document.createElement('div');
+      buttonDelete.innerHTML = `<button class="input-button" operation="del" ><span type="button" operation="del" idinput="${this.idWork}" 
       class="material-symbols-outlined"> delete</span></button>`;
-      buttonDelite.setAttribute('operation', 'del');
-      buttonDelite.setAttribute('idinput', obj.idProduct)
-      inputWraper.append(buttonDelite);
+      buttonDelete.setAttribute('operation', 'del');
+      buttonDelete.setAttribute('idinput', this.idWork)
+      inputWraper.append(buttonDelete);
+      buttonDelete.addEventListener('click', this.plusMinusGoods.bind(this))
+
 
       const out = document.createElement('div');
       inputWraper.append(out);
-      out.classList.add('out', obj.idProduct);
-
-      this.idWork = obj.idProduct;
-      document.querySelector('.input-count').addEventListener('input', this.changeAmountGoods.bind(this));
-      document.querySelectorAll('.input-button').forEach(element => {
-         element.addEventListener('click', this.plusMinusGoods.bind(this))
-      })
+      out.classList.add('out', this.idWork);
       this.updateBasketAndCalculate();
    }
 
    updateBasketAndCalculate() {
-      const doc = document.getElementsByClassName(this.idWork);
-      const arrElementInput = document.querySelectorAll('.input-count');
-      let element;
+      let sumOrder = 0;
+      for (let key in this.basketArr) {
+         sumOrder += this.basketArr[key].price * this.basketArr[key].amount;
+      };
+      this.sumOrderTotal = sumOrder;
 
-      for (let objectProduct of this.basketArr) {
-         if (objectProduct.idProduct == this.idWork) {
-            element = objectProduct
+      if (!this.deleteProductHTML) {
+         const doc = document.getElementsByClassName(this.idWork);
+         const arrElementInput = document.querySelectorAll('.input-count');
+         for (let key2 of arrElementInput) {
+            let idInput = key2.getAttribute('idinput')
+            if (idInput == this.idWork) {
+               key2.setAttribute('value', this.basketArr[this.idWork].amount);
+            }
          }
+         doc[0].innerHTML = `${this.basketArr[this.idWork].amount * this.basketArr[this.idWork].price} грн`;
       }
-
-      for (let key2 of arrElementInput) {
-         let idInput = key2.getAttribute('idinput')
-
-         if (idInput == this.idWork) {
-            key2.setAttribute('value', element.amount);
-         }
-      }
-      this.sumOrderTotal = this.basketArr.reduce((total, obj) => total + (obj.amount * obj.price), 0);
-      doc[0].innerHTML = `${element.amount * element.price} грн`;
+      this.deleteProductHTML = false;
       document.querySelector('.order-sum').innerHTML = `Сумма заказа: ${this.sumOrderTotal} грн <button class="buy">Оформить заказ`;
       document.querySelector('.buy').onclick = this.aproveOrder.bind(this);
    };
@@ -108,52 +111,42 @@ class Basket {
    changeAmountGoods(event) {
       const idInput = event.target.getAttribute('idinput');
       const amount = event.target.value;
-      for (let key of this.basketArr) {
-         if (key.idProduct == idInput) {
-            key.amount = amount;
-            console.log('=');
-         }
-      };
+      this.idWork = idInput;
+      this.basketArr[this.idWork].amount = amount;
       this.updateBasketAndCalculate();
    }
 
    plusMinusGoods(event) {
-      const idWraper = document.querySelector('idwraper');
       const idInput = event.target.getAttribute('idinput');
       const operation = event.target.getAttribute('operation');
-      let count = 0;
-      for (let key of this.basketArr) {
-         if (key.idProduct == idInput) {
-            this.idWork = key.idProduct;
-            switch (operation) {
-               case 'minus': if (key.amount > 1) { key.amount-- };
-                  break;
-               case 'plus': key.amount++;
-                  break;
-               case 'del':
-                  // console.log(this.basketArr);
-                  // this.basketArr.splice([count], 1);
-                  document.querySelector('.block-basket').removeChild(idWraper)
-                  console.log(this.basketArr);
-                  break;
-            }
-         }
-         count++
-         console.log(count);
+      this.idWork = idInput;
+      switch (operation) {
+         case 'minus': if (this.basketArr[this.idWork].amount > 1) { this.basketArr[this.idWork].amount-- };
+            break;
+         case 'plus': this.basketArr[this.idWork].amount++;
+            break;
+         case 'del':
+            delete this.basketArr[this.idWork];
+            const x = event.target.parentNode.parentNode.parentNode.parentNode;
+            document.querySelector('.block-basket').removeChild(x);
+            this.deleteProductHTML = true;
+            break;
       }
       this.updateBasketAndCalculate();
    }
 
    aproveOrder() {
-      const block = document.querySelector('.block-basket');
+      const blockBalance = document.querySelector('.balance');
+      const blockBasket = document.querySelector('.block-basket');
+      const blockOrderSum = document.querySelector('.order-sum');
       if (this.sumOrderTotal <= balance) {
          balance = balance - this.sumOrderTotal;
-         this.basketArr = []
-         block.innerHTML = `Заказ оформлен. Сумма баланса ${balance} грн`;
-
+         this.basketArr = {}
+         blockBasket.innerHTML = '';
+         blockOrderSum.innerHTML = '';
+         blockBalance.innerHTML = `Заказ оформлен. Сумма баланса ${balance} грн`;
       } else {
-         block.innerHTML = `Недостаточно средств на балансе для покупки`;
-
+         blockBalance.innerHTML = `Недостаточно средств на балансе для покупки`;
       }
-   };
+   }
 }

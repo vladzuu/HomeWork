@@ -10,9 +10,6 @@ const productsArr = [
    new Product('Tea', 55, 9),
 ]
 
-
-
-let balance = 5000;//plus balance minus balanse
-
+let balance = 5000;
 const basket = new Basket();
 
