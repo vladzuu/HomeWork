@@ -3,23 +3,32 @@ class Calculator {
       this.startNum = startNum;
       this.result = this.startNum
    }
-   plus(num) {
-      this.result += num
+   plus(...num) {
+      for (const arg of num) {
+         this.result += arg
+      }
+      return this
    }
-   minus(num) {
-      this.result -= num
+   minus(...num) {
+      for (const arg of num) {
+         this.result -= arg
+      }
+      return this
    }
-   divide(num) {
-      this.result /= num
+   divide(...num) {
+      for (const arg of num) {
+         this.result /= arg
+      }
+      return this
    }
-   multiple(num) {
-      this.result *= num
+   multiple(...num) {
+      for (const arg of num) {
+         this.result *= arg
+      }
+      return this
    }
 
 }
 let sample = new Calculator(100);
-sample.plus(5)
-sample.minus(3)
-sample.divide(5)
-sample.multiple(5)
+sample.plus(5, 5, 5).minus(5, 5, 5).divide(2, 4, 5).multiple(2, 2, 3)
 console.log(sample);
